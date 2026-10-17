@@ -1,0 +1,268 @@
+[
+  {
+    "key": "Q1",
+    "section": "Part A: Financial capacity (RC)",
+    "title": "Q1. Emergency savings (RC)",
+    "text": "If your income stopped tomorrow, how long could you cover your living costs from cash and easily accessible savings, without selling any investments?",
+    "whyItMatters": "Without a cash buffer, a market fall can force you to sell at a loss, turning a temporary drop into a permanent one. 3 to 6 months is the common planning minimum.",
+    "options": [
+      {
+        "key": "A",
+        "label": "Less than 3 months"
+      },
+      {
+        "key": "B",
+        "label": "3 to 6 months"
+      },
+      {
+        "key": "C",
+        "label": "6 to 12 months"
+      },
+      {
+        "key": "D",
+        "label": "More than 12 months"
+      }
+    ]
+  },
+  {
+    "key": "Q2",
+    "section": "Part A: Financial capacity (RC)",
+    "title": "Q2. Impact of a loss (RC)",
+    "text": "Imagine the money you plan to invest falls by 30%. What would that do to your finances and life plans?",
+    "whyItMatters": "One question captures the share of wealth at risk, debt, dependents and income stability, so no separate demographic questions are needed. It measures the ability to absorb loss, not the willingness.",
+    "options": [
+      {
+        "key": "A",
+        "label": "I would have to cut essential spending, borrow, or give up an important goal"
+      },
+      {
+        "key": "B",
+        "label": "It would seriously delay an important goal, but I could cope"
+      },
+      {
+        "key": "C",
+        "label": "It would be unpleasant, but my plans would not change"
+      },
+      {
+        "key": "D",
+        "label": "It would have little effect, because this is a small part of my wealth"
+      }
+    ]
+  },
+  {
+    "key": "Q3",
+    "section": "Part B: Investment horizon and liquidity (HZ, LQ)",
+    "title": "Q3. Time horizon (HZ)",
+    "text": "When do you expect to need a substantial part (more than a quarter) of this money?",
+    "whyItMatters": "Equity drawdowns can take years to recover. A-share history, such as the 2015 to 2016 fall, shows that short horizons and equity losses are a poor match.",
+    "options": [
+      {
+        "key": "A",
+        "label": "Within 1 year"
+      },
+      {
+        "key": "B",
+        "label": "In 1 to 3 years"
+      },
+      {
+        "key": "C",
+        "label": "In 3 to 5 years"
+      },
+      {
+        "key": "D",
+        "label": "In 5 to 10 years"
+      },
+      {
+        "key": "E",
+        "label": "More than 10 years"
+      }
+    ]
+  },
+  {
+    "key": "Q4",
+    "section": "Part B: Investment horizon and liquidity (HZ, LQ)",
+    "title": "Q4. Unexpected cash needs (LQ)",
+    "text": "How likely is it that you will need to withdraw a large part of this money unexpectedly within the next 3 years (for example medical costs, a property purchase, family or business needs)?",
+    "whyItMatters": "Q3 asks when money is intended to be used. Q4 asks about forced withdrawals. Forced selling in a downturn is the main way investors lock in losses.",
+    "options": [
+      {
+        "key": "A",
+        "label": "Already planned, or very likely"
+      },
+      {
+        "key": "B",
+        "label": "Possible"
+      },
+      {
+        "key": "C",
+        "label": "Unlikely"
+      },
+      {
+        "key": "D",
+        "label": "Very unlikely, I have separate funds for those needs"
+      }
+    ]
+  },
+  {
+    "key": "Q5",
+    "section": "Part C: Risk tolerance (RT)",
+    "title": "Q5. Largest acceptable loss (RT)",
+    "text": "If markets turn bad, what is the largest fall in the value of your investment over one year that you could accept without changing your plans?",
+    "whyItMatters": "This is your stated loss tolerance. It is considered in the suitability assessment and risk-policy explanation.",
+    "options": [
+      {
+        "key": "A",
+        "label": "About 5%"
+      },
+      {
+        "key": "B",
+        "label": "About 10%"
+      },
+      {
+        "key": "C",
+        "label": "About 20%"
+      },
+      {
+        "key": "D",
+        "label": "About 30%"
+      },
+      {
+        "key": "E",
+        "label": "40% or more"
+      }
+    ]
+  },
+  {
+    "key": "Q6",
+    "section": "Part C: Risk tolerance (RT)",
+    "title": "Q6. Risk and return trade-off (RT)",
+    "text": "Which one-year outcome range would you choose for an investment of ¥100,000? The ranges are illustrations of best and worst cases, not forecasts.",
+    "whyItMatters": "A choice between concrete outcomes reveals preference better than a self-label such as \"I am an aggressive investor\". It also cross-checks Q5.",
+    "options": [
+      {
+        "key": "A",
+        "label": "Between -¥2,000 and +¥4,000"
+      },
+      {
+        "key": "B",
+        "label": "Between -¥8,000 and +¥12,000"
+      },
+      {
+        "key": "C",
+        "label": "Between -¥15,000 and +¥25,000"
+      },
+      {
+        "key": "D",
+        "label": "Between -¥25,000 and +¥40,000"
+      },
+      {
+        "key": "E",
+        "label": "Between -¥40,000 and +¥70,000"
+      }
+    ]
+  },
+  {
+    "key": "Q7",
+    "section": "Part C: Risk tolerance (RT)",
+    "title": "Q7. Reaction to volatility (RT)",
+    "text": "How would you feel if the value of your portfolio moved up and down by about 10% within a single month?",
+    "whyItMatters": "A-share stocks often move this much in a month. Emotional discomfort is a main cause of panic selling.",
+    "options": [
+      {
+        "key": "A",
+        "label": "Very anxious, I would want to sell"
+      },
+      {
+        "key": "B",
+        "label": "Uncomfortable, I would check it constantly"
+      },
+      {
+        "key": "C",
+        "label": "Acceptable if I understood why it was happening"
+      },
+      {
+        "key": "D",
+        "label": "Comfortable, this is normal for stocks"
+      }
+    ]
+  },
+  {
+    "key": "Q8",
+    "section": "Part D: Investment knowledge (KN)",
+    "title": "Q8. Experience and understanding of individual stocks (KN)",
+    "text": "Which statement best describes you?",
+    "whyItMatters": "Individual stocks carry company-specific risk that funds diversify away. A client who does not understand this cannot give meaningful consent.",
+    "options": [
+      {
+        "key": "A",
+        "label": "I have no investing experience, and I am unsure how stock prices can fall"
+      },
+      {
+        "key": "B",
+        "label": "I have only used funds or wealth products, and I know little about single-stock risk"
+      },
+      {
+        "key": "C",
+        "label": "I have held individual stocks and understand that one stock can fall sharply or permanently lose value"
+      },
+      {
+        "key": "D",
+        "label": "I have held individual stocks through a market fall of 20% or more, and I understand diversification, volatility and drawdown"
+      }
+    ]
+  },
+  {
+    "key": "Q9",
+    "section": "Part E: Investment goals and behaviour (scored within RT)",
+    "title": "Q9. Main goal (RT, goal)",
+    "text": "Which statement best describes your main goal for this money?",
+    "whyItMatters": "The goal sets the return you need, which should never push the portfolio beyond capacity or tolerance. It is used for scoring and for explaining recommendations.",
+    "options": [
+      {
+        "key": "A",
+        "label": "Protect my capital, I accept lower returns to avoid losses"
+      },
+      {
+        "key": "B",
+        "label": "Earn steady, modest growth with small fluctuations"
+      },
+      {
+        "key": "C",
+        "label": "Grow my wealth steadily and accept moderate ups and downs"
+      },
+      {
+        "key": "D",
+        "label": "Maximise long-term growth and accept large ups and downs"
+      },
+      {
+        "key": "E",
+        "label": "Achieve high growth, even if I could lose a large part of it"
+      }
+    ]
+  },
+  {
+    "key": "Q10",
+    "section": "Part E: Investment goals and behaviour (scored within RT)",
+    "title": "Q10. Behaviour in a downturn (RT, behaviour)",
+    "text": "Suppose your portfolio falls 25% within three months and the news is negative. What would you most likely do?",
+    "whyItMatters": "Behaviour in a fall is the best single predictor of whether you will stay invested. It receives the highest weight inside Risk Tolerance.",
+    "options": [
+      {
+        "key": "A",
+        "label": "Sell everything"
+      },
+      {
+        "key": "B",
+        "label": "Sell part to reduce risk"
+      },
+      {
+        "key": "C",
+        "label": "Hold and wait"
+      },
+      {
+        "key": "D",
+        "label": "Stay invested, and add more if my reasons for owning the stocks still hold"
+      }
+    ]
+  }
+]

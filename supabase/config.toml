@@ -1,0 +1,3 @@
+[functions.aura-report-worker]
+verify_jwt = false
+entrypoint = './functions/aura-report-worker/index.js'
