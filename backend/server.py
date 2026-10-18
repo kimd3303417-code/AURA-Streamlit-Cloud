@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 from urllib.error import HTTPError, URLError
@@ -56,9 +57,16 @@ class AdminDatabase:
         return self.client.from_(name)
 
 
+@lru_cache(maxsize=1)
 def admin():
     url, secret = config()
     return AdminDatabase(url, secret)
+
+
+@lru_cache(maxsize=1)
+def covariance_matrix():
+    """The bundled covariance workbook is immutable during an app process."""
+    return load_covariance_matrix(str(COVARIANCE_PATH))
 
 
 def current_user(authorization: str | None = Header(default=None)) -> str:
@@ -254,7 +262,7 @@ def optimise(req: OptimiseRequest, user_id: str = Depends(current_user)):
         raise HTTPException(409, 'Report already queued; start a new assessment')
     try:
         selected = pd.DataFrame([r for r in rec['stocks_snapshot'] if r['stock_code'] in codes])
-        covariance = load_covariance_matrix(str(COVARIANCE_PATH))
+        covariance = covariance_matrix()
         result = optimise_selected_portfolio(selected, covariance,
             rec['screening_criteria']['calibration'])
         portfolio = result['portfolio']
@@ -301,7 +309,7 @@ def adjust_portfolio_amount(req: AdjustAmountRequest, user_id: str = Depends(cur
     try:
         current = {'portfolio': pd.DataFrame(record['positions']),
                    'constraints': inputs['constraints']}
-        covariance = load_covariance_matrix(str(COVARIANCE_PATH))
+        covariance = covariance_matrix()
         preview = preview_amount_adjustment(
             current, covariance, float(total_amount),
             req.stock_code.strip().zfill(6), req.new_amount)
@@ -400,13 +408,13 @@ def enqueue_report(req: AnalysisRequest, user_id: str = Depends(current_user)):
 @app.post('/api/reports/{report_id}/retry')
 def retry_report(report_id: UUID, user_id: str = Depends(current_user)):
     row = owned('aura_reports', user_id, report_id=str(report_id))
-    if row['status'] != 'failed':
-        raise HTTPException(409, 'Only a failed report can be retried')
+    if row['status'] not in ('failed', 'completed'):
+        raise HTTPException(409, 'Only a failed or completed report can be regenerated')
     updated = (admin().table('aura_reports').update({
         'status': 'pending', 'started_at': None, 'failed_at': None,
-        'error_code': None, 'storage_path': None,
+        'completed_at': None, 'error_code': None, 'storage_path': None,
     }).eq('report_id', str(report_id)).eq('user_id', user_id)
-      .eq('status', 'failed').execute().data or [])
+      .eq('status', row['status']).execute().data or [])
     if not updated:
         raise HTTPException(409, 'Report status changed; refresh and try again')
     event(user_id, row['analysis_id'], 'report_requeued', {'report_id': str(report_id)})
