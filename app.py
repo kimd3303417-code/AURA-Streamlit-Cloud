@@ -63,7 +63,18 @@ p { line-height:1.65; }
 div.stButton>button[kind="primary"] { background:#007f7a; border:1px solid #007f7a; border-radius:10px; font-weight:700; }
 div.stButton>button { border-radius:10px; font-weight:600; min-height:42px; }
 [data-testid="stMetric"] { background:white; border:1px solid var(--line); border-radius:15px; padding:1rem 1.1rem; }
-[data-testid="stProgress"]>div>div { background:#007f7a; }
+[data-testid="stProgress"]>div>div { background:#007f7a; }/* Follow the Streamlit Light, Dark, and System theme choice. */
+[data-testid="stAppViewContainer"] { background:light-dark(#f5f8f7,#101b23); color:light-dark(#12243a,#edf4f5); }
+h1,h2,h3,.aura-card-title { color:light-dark(#12243a,#edf4f5); }
+.aura-card,[data-testid="stMetric"] { background:light-dark(#ffffff,#192832); color:light-dark(#12243a,#edf4f5); border-color:light-dark(#dce5e8,#38505a); }
+.aura-muted { color:light-dark(#5e6e7d,#aebdc3); }
+.aura-eyebrow,.aura-kicker,.aura-number { color:light-dark(#007f7a,#79ded3); }
+.aura-step { background:light-dark(#ecf8f5,#173b3a); border-color:light-dark(#b4d8d2,#407b75); color:light-dark(#006d68,#a5efe4); }
+.aura-badge { background:light-dark(#e2f4f0,#173e3e); color:light-dark(#056f69,#a5efe4); }
+.aura-badge-warn { background:light-dark(#fff3db,#4a3920); color:light-dark(#8b6000,#ffdb93); }
+.aura-divider { border-color:light-dark(#dce5e8,#38505a); }
+div.stButton>button[kind="primary"], button[kind="primaryFormSubmit"] { background:#007f7a; border-color:#007f7a; color:#ffffff; }
+
 </style>
 """, unsafe_allow_html=True)
 
