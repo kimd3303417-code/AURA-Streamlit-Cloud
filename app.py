@@ -72,6 +72,13 @@ def safe(value: object) -> str:
     return html.escape(str(value if value is not None else "—"))
 
 
+def set_page(page: str):
+    st.session_state.page = page
+    # Sync the sidebar widget before it is rendered on the next run. Otherwise
+    # its previous selection can override a page change made by a button.
+    st.session_state["_nav_sync"] = page
+
+
 def request_json(url: str, method: str = "GET", payload=None, headers=None):
     body = json.dumps(payload).encode() if payload is not None else None
     req = Request(url, data=body, method=method, headers={"Content-Type": "application/json", **(headers or {})})
@@ -213,7 +220,7 @@ def sign_in():
             st.text_input("Password", placeholder="••••••••", type="password", disabled=True, key="demo_login_password")
             if st.button("Enter sample workspace", type="primary", use_container_width=True, key="demo_enter_login"):
                 st.session_state.demo_entered = True
-                st.session_state.page = "Home"
+                set_page("Home")
                 st.rerun()
         with tab_signup:
             st.text_input("Email", placeholder="name@example.com", disabled=True, key="demo_signup_email")
@@ -222,7 +229,7 @@ def sign_in():
             st.caption("In the live app, registration sends an email confirmation link.")
             if st.button("Enter sample workspace", use_container_width=True, key="demo_enter_signup"):
                 st.session_state.demo_entered = True
-                st.session_state.page = "Home"
+                set_page("Home")
                 st.rerun()
         with tab_reset:
             st.text_input("Account email", placeholder="name@example.com", disabled=True, key="demo_reset_email")
@@ -322,7 +329,7 @@ def home():
                         f'<div class="aura-card-title">{title}</div><p class="aura-muted">{desc}</p></div>', unsafe_allow_html=True)
     st.write("")
     if st.button("Start risk assessment  →", type="primary"):
-        st.session_state.page = "Assessment"
+        set_page("Assessment")
         st.rerun()
     if DEMO and st.button("Jump to live stock selection preview  →"):
         try:
@@ -336,7 +343,7 @@ def home():
             st.session_state.optimisation = None
             st.session_state.manual_optimisation = None
             st.session_state.adjustment_preview = None
-            st.session_state.page = "Recommendations"
+            set_page("Recommendations")
             st.rerun()
         except (RuntimeError, ValueError) as exc:
             st.error(str(exc))
@@ -378,7 +385,7 @@ def assessment():
                     st.session_state.manual_optimisation = None
                     st.session_state.adjustment_preview = None
                     st.session_state.picks = []
-                    st.session_state.page = "Recommendations"
+                    set_page("Recommendations")
                 except RuntimeError as exc:
                     st.error(str(exc))
                     return
@@ -390,7 +397,7 @@ def recommendations():
     if not result:
         st.info("Complete the risk assessment to see your results.")
         if st.button("Start assessment", type="primary"):
-            st.session_state.page = "Assessment"
+            set_page("Assessment")
             st.rerun()
         return
     profile = result["client_profile"]
@@ -410,10 +417,11 @@ def recommendations():
     if st.session_state.get("screen") is None:
         if st.button("Find my 15 candidates  →", type="primary"):
             try:
-                if DEMO:
-                    st.session_state.screen = live_recommendations(st.session_state.answers)
-                else:
-                    st.session_state.screen = api("/api/screen", "POST", {"analysis_id": result["analysis_id"]})
+                with st.spinner("Screening stocks against your risk profile…"):
+                    if DEMO:
+                        st.session_state.screen = live_recommendations(st.session_state.answers)
+                    else:
+                        st.session_state.screen = api("/api/screen", "POST", {"analysis_id": result["analysis_id"]})
                 st.rerun()
             except (RuntimeError, ValueError) as exc:
                 st.error(str(exc))
@@ -460,30 +468,31 @@ def recommendations():
         st.caption("AURA will turn the optimised weights into suggested stock amounts. This is the amount for this stock portfolio, not your total wealth.")
     if st.button("Optimise selected portfolio  →", type="primary", disabled=not 3 <= len(selected) <= 15):
         try:
-            if DEMO:
-                import pandas as pd
-                from aura_engine import allocate_investment_amounts, optimise_selected_portfolio
-                chosen = [s for s in stocks if s["stock_code"] in selected]
-                computed = optimise_selected_portfolio(
-                    pd.DataFrame(chosen), portfolio_covariance(), calibration)
-                with_amounts = allocate_investment_amounts(computed["portfolio"], amount)
-                optimisation = {
-                    "portfolio": with_amounts.to_dict(orient="records"),
-                    "summary": computed["summary"],
-                    "analysis_id": "LOCAL-DEMO",
-                    "constraints": computed["constraints"],
-                    "total_amount": round(float(amount), 2),
-                    "currency": currency,
-                }
-            else:
-                optimisation = api("/api/optimise", "POST", {"analysis_id":result["analysis_id"],
-                                                               "selected_codes":selected,
-                                                               "total_amount":amount,
-                                                               "currency":currency})
+            with st.spinner("Calculating risk-based weights and saving your portfolio…"):
+                if DEMO:
+                    import pandas as pd
+                    from aura_engine import allocate_investment_amounts, optimise_selected_portfolio
+                    chosen = [s for s in stocks if s["stock_code"] in selected]
+                    computed = optimise_selected_portfolio(
+                        pd.DataFrame(chosen), portfolio_covariance(), calibration)
+                    with_amounts = allocate_investment_amounts(computed["portfolio"], amount)
+                    optimisation = {
+                        "portfolio": with_amounts.to_dict(orient="records"),
+                        "summary": computed["summary"],
+                        "analysis_id": "LOCAL-DEMO",
+                        "constraints": computed["constraints"],
+                        "total_amount": round(float(amount), 2),
+                        "currency": currency,
+                    }
+                else:
+                    optimisation = api("/api/optimise", "POST", {"analysis_id":result["analysis_id"],
+                                                                   "selected_codes":selected,
+                                                                   "total_amount":amount,
+                                                                   "currency":currency})
             st.session_state.optimisation = optimisation
             st.session_state.manual_optimisation = None
             st.session_state.adjustment_preview = None
-            st.session_state.page = "Portfolio"
+            set_page("Portfolio")
             st.rerun()
         except (RuntimeError, ValueError) as exc:
             st.error(str(exc))
@@ -507,7 +516,7 @@ def portfolio():
     if total_amount is not None:
         st.metric("Investment amount for these selected stocks", f'{currency} {float(total_amount):,.2f}')
         if st.button("Change total investment amount"):
-            st.session_state.page = "Recommendations"
+            set_page("Recommendations")
             st.rerun()
         st.markdown("### Current allocation")
         st.dataframe([{"Stock": row.get("stock_code"), "Company": row.get("company_name"),
@@ -611,7 +620,7 @@ def portfolio():
     elif st.button("Request Gemini explanation report  →", type="primary"):
         try:
             api("/api/reports", "POST", {"analysis_id":result["analysis_id"]})
-            st.session_state.page = "My Reports"
+            set_page("My Reports")
             st.rerun()
         except RuntimeError as exc:
             st.error(str(exc))
@@ -643,7 +652,8 @@ def history():
                                   "baseline_risk_metrics": baseline["summary"]}} if current else None})
     else:
         try:
-            entries = api("/api/history")
+            with st.spinner("Loading your investment history…"):
+                entries = api("/api/history")
         except RuntimeError as exc:
             st.error(str(exc))
             return
@@ -696,7 +706,7 @@ def history():
             if port and not DEMO and st.button("Request or view Gemini report", key=f'queue_history_{a["analysis_id"]}'):
                 try:
                     api("/api/reports", "POST", {"analysis_id": a["analysis_id"]})
-                    st.session_state.page = "My Reports"
+                    set_page("My Reports")
                     st.rerun()
                 except RuntimeError as exc:
                     st.error(str(exc))
@@ -734,6 +744,12 @@ def report_status_list():
                     st.link_button("Download PDF (expires in 60 seconds)", data["url"])
                 except RuntimeError as exc:
                     st.error(str(exc))
+            if st.button("Regenerate with latest report template", key=f'regenerate_{row["report_id"]}'):
+                try:
+                    api(f'/api/reports/{row["report_id"]}/retry', "POST")
+                    st.rerun(scope="fragment")
+                except RuntimeError as exc:
+                    st.error(str(exc))
         elif status == "failed":
             if st.button("Retry report", key=f'retry_{row["report_id"]}'):
                 try:
@@ -765,7 +781,11 @@ def main():
             st.caption(session().get("user", {}).get("email", "Signed in"))
         pages = ["Home", "Assessment", "Recommendations", "Portfolio", "My Investment History", "My Reports"]
         current = st.session_state.get("page", "Home")
-        page = st.radio("Navigation", pages, index=pages.index(current) if current in pages else 0)
+        sync_page = st.session_state.pop("_nav_sync", None)
+        if sync_page in pages:
+            st.session_state["navigation"] = sync_page
+        page = st.radio("Navigation", pages, index=pages.index(current) if current in pages else 0,
+                        key="navigation")
         if page != current:
             st.session_state.page = page
             st.rerun()
